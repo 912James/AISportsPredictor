@@ -15,6 +15,7 @@ Deployment: Hosted on Heroku for public access and demonstration.
 
 ## Demo
 Try the live application here: AI Sports Predictor on Heroku
+
 sports-predictor-2c313aca4669.herokuapp.com
 
 ## How It Works
