@@ -1,0 +1,6 @@
+flask==2.3.2
+scikit-learn==1.2.2  # Older, stable version
+pandas==1.5.3        # Matches numpy 1.23
+numpy==1.23.5        # Known to work with pandas 1.5.3
+requests==2.31.0
+gunicorn==21.2.0
