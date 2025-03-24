@@ -1,3 +1,5 @@
+# predictor.py: Core logic for fetching ESPN sports data and training prediction models
+
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
@@ -19,7 +21,10 @@ class ScoreFetcher:
                     'POR', 'SAC', 'SA', 'TOR', 'UTAH', 'WSH'},
             'nfl': {'ARI', 'ATL', 'BAL', 'BUF', 'CAR', 'CHI', 'CIN', 'CLE', 'DAL', 'DEN', 'DET', 'GB', 
                     'HOU', 'IND', 'JAX', 'KC', 'LAC', 'LAR', 'MIA', 'MIN', 'NE', 'NO', 'NYG', 'NYJ', 
-                    'OAK', 'PHI', 'PIT', 'SF', 'SEA', 'TB', 'TEN', 'WSH'}
+                    'LV', 'PHI', 'PIT', 'SF', 'SEA', 'TB', 'TEN', 'WSH'},
+            'mlb': {'ARI', 'ATL', 'BAL', 'BOS', 'CHC', 'CHW', 'CIN', 'CLE', 'COL', 'DET', 'HOU', 'KC', 
+                    'LAA', 'LAD', 'MIA', 'MIL', 'MIN', 'NYM', 'NYY', 'OAK', 'PHI', 'PIT', 'SD', 'SF', 
+                    'SEA', 'STL', 'TB', 'TEX', 'TOR', 'WSH'}
         }
 
     def fetch_season(self, sport='nba', start_date=None, end_date=None):
