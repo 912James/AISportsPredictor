@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+    <!-- Include Chart.js library for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Style the body for centered content layout */
+        body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: Arial, sans-serif; }
+        /* Define header font size and spacing */
+        h1 { font-size: 2em; margin-bottom: 20px; }
+        /* Set paragraph font size for readability */
+        p { font-size: 1.5em; }
+        /* Limit chart dimensions for consistent display */
+        canvas { max-width: 400px; max-height: 400px; }
+    </style>
+</head>
+<body>
+    <!-- Display the prediction result title -->
+    <h1>Prediction Result</h1>
+    <!-- Render the prediction text passed from backend -->
+    <p>{{ prediction }}</p>
+    <!-- Canvas element for rendering the probability chart -->
+    <canvas id="predictionChart"></canvas>
+    <!-- Link to return to the predictor page -->
+    <p><a href="/">Back to Predictor</a></p>
+    <script>
+        // Verify Chart.js availability in the console
+        console.log("Chart.js Available: " + (typeof Chart !== "undefined" ? "Yes" : "No"));
+
+        // Retrieve chart data passed from Jinja template
+        try {
+            var chartData = {{ chart_data | safe }};
+            console.log("Chart Data:", chartData);
+        } catch (e) {
+            console.error("Error parsing chartData:", e);
+            var chartData = { team1: "Unknown", team2: "Unknown", team1_prob: 0, team2_prob: 0 }; // Fallback
+        }
+
+        // Get 2D context of the canvas for Chart.js
+        const ctx = document.getElementById('predictionChart').getContext('2d');
+        const data = chartData;  // Use JSON data directly from template
+        console.log("Parsed Data:", data);
+
+        // Initialize a bar chart with team win probabilities
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [data.team1, data.team2],  // Set x-axis labels as team names
+                datasets: [{
+                    label: 'Win Probability (%)',  // Define dataset label
+                    data: [data.team1_prob, data.team2_prob],  // Plot probability values
+                    backgroundColor: ['#36A2EB', '#FF6384'],  // Assign distinct colors
+                    borderWidth: 1  // Add border for visual clarity
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,  // Start y-axis at 0
+                        max: 100,  // Cap y-axis at 100%
+                        title: { display: true, text: 'Probability (%)' }  // Label y-axis
+                    }
+                },
+                plugins: {
+                    legend: { display: false }  // Hide legend for simplicity
+                }
+            }
+        });
+        console.log("Chart Rendered");  // Confirm chart rendering in console
+    </script>
+</body>
+</html>

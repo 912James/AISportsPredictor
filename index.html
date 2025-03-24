@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sports Predictor</title>
+    <style>
+        /* Center the content vertically and horizontally on the page */
+        body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: Arial, sans-serif; }
+        /* Style the header with appropriate size and spacing */
+        h1 { font-size: 2em; margin-bottom: 20px; }
+        /* Arrange form elements in a centered column layout */
+        form { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        /* Ensure consistent font size and padding for form inputs */
+        select, button { font-size: 1.1em; padding: 5px; }
+        /* Highlight error messages in red for visibility */
+        .error { color: red; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <!-- Display the page title -->
+    <h1>Sports Predictor</h1>
+    <!-- Form for submitting sport and team selections -->
+    <form method="POST" action="/">
+        <!-- Dropdown for selecting a sport -->
+        <select name="sport" id="sportSelect">
+            <option value="">Select Sport</option>
+            <!-- Populate sport options dynamically using Jinja -->
+            {% for s in sports %}
+                <option value="{{ s }}" {% if s == selected_sport %}selected{% endif %}>{{ s.upper() }}</option>
+            {% endfor %}
+        </select>
+        <!-- Dropdown for selecting the first team -->
+        <select name="team1" id="team1Select">
+            <option value="">Select Team 1</option>
+        </select>
+        <!-- Dropdown for selecting the second team -->
+        <select name="team2" id="team2Select">
+            <option value="">Select Team 2</option>
+        </select>
+        <!-- Submit button to trigger prediction -->
+        <button type="submit">Predict</button>
+    </form>
+    <!-- Display error message if present, styled with error class -->
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <script type="text/javascript">
+        // Use var to avoid redeclaration issues; log raw output for debugging
+        try {
+            var teams = {{ teams | tojson | safe }};
+            console.log("Teams data (raw):", teams);
+        } catch (e) {
+            console.error("Error parsing teams:", e);
+            var teams = {}; // Fallback to empty object if parsing fails
+        }
+
+        const sportSelect = document.getElementById('sportSelect');
+        const team1Select = document.getElementById('team1Select');
+        const team2Select = document.getElementById('team2Select');
+
+        // Function to update team dropdowns based on selected sport
+        function updateTeamOptions() {
+            const selectedSport = sportSelect.value;
+            team1Select.innerHTML = '<option value="">Select Team 1</option>';
+            team2Select.innerHTML = '<option value="">Select Team 2</option>';
+
+            if (selectedSport && teams[selectedSport]) {
+                teams[selectedSport].forEach(team => {
+                    const option1 = document.createElement('option');
+                    option1.value = team;
+                    option1.text = team;
+                    team1Select.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = team;
+                    option2.text = team;
+                    team2Select.appendChild(option2);
+                });
+            }
+        }
+
+        // Initial population based on selected_sport
+        updateTeamOptions();
+
+        // Update teams when sport changes
+        sportSelect.addEventListener('change', updateTeamOptions);
+    </script>
+</body>
+</html>
